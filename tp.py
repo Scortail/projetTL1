@@ -548,6 +548,8 @@ def eval_exp():
     elif ch == "/":
         n1 = eval_exp()
         n2 = eval_exp()
+        if n2 == 0:
+            raise Error('division by zero')
         return n1 / n2
     else: 
         return number()[1]
@@ -742,6 +744,8 @@ def eval_exp_v2():
         consume_char()
         n1 = eval_exp_v2()
         n2 = eval_exp_v2()
+        if n2 == 0:
+            raise Error("Division by zero")
         return n1 / n2
     else: 
         consume_char()
@@ -756,9 +760,11 @@ operator = set(['+', '-', '*', '/'])
 def FA_Lex():
     init_char()
     ch = peek_char()
-    if ch == "(" or ch == ")" or ch in operator:
+    if ch in operator:
         consume_char()
         return True
+    elif ch in ["(", ")"]:
+        return (True, ch)
     return number_v2()[0]
 
 
@@ -783,15 +789,19 @@ def FA_Lex_w_token():
         consume_char()
         return (True, FPAR)
     elif ch == "+":
+        consume_char() # On consomme deux fois afin d'enlever l'espace après le + 
         consume_char()
         return (True, ADD)
     elif ch == "-":
         consume_char()
+        consume_char()
         return (True, SOUS)
     elif ch == "*":
         consume_char()
+        consume_char()
         return (True, MUL)
     elif ch == "/":
+        consume_char()
         consume_char()
         return (True, DIV)
     valide, nombre = number_v2()
@@ -812,15 +822,18 @@ if __name__ == "__main__":
         # ok, val = number() # changer ici pour tester un autre automate avec valeur
         # ok, val = True, eval_exp_v2() # changer ici pour tester eval_exp et eval_exp_v2
         # ok = FA_Lex()
-        ok, token = FA_Lex_w_token()
-        if ok:
-            print("Accepted!")
-            # print("value:", val) # décommenter ici pour afficher la valeur (question 4 et +)
-            print(f"Valeur de retour du programme: {ok, token}")
-            if token == 0 :
-                print(f"Valeur du token {token_value}")
-        else:
-            print("Rejected!")
-            # print("value so far:", int_value) # décommenter ici pour afficher la valeur en cas de rejet
+        for i in range(4):
+            ok, token = FA_Lex_w_token()
+            consume_char()
+            if ok:
+                print("Accepted!")
+                # print("value:", val) # décommenter ici pour afficher la valeur (question 4 et +)
+                
+                print(f"Valeur de retour du programme: {ok, token}")
+                if token == 0 :
+                    print(f"Valeur du token {token_value}")
+            else:
+                print("Rejected!")
+                # print("value so far:", int_value) # décommenter ici pour afficher la valeur en cas de rejet
     except Error as e:
         print("Error:", e)
