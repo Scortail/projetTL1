@@ -754,69 +754,14 @@ def eval_exp_v2():
 operator = set(['+', '-', '*', '/'])
 
 def FA_Lex():
-    exp = ""
     init_char()
-    return FA_Lex_state_0()
-
-def FA_Lex_state_0() :
     ch = peek_char()
-    if number_v2()[0] :
-        exp += "number "
-        return number_v2_state_1()
-    elif ch == "(" :
-        return FA_Lex_state_2()
-    elif ch == '{' :
-        return FA_Lex_state_3()
-    return (False, None)
+    if ch == "(" or ch == ")" or ch in operator:
+        consume_char()
+        return True
+    return number_v2()[0]
 
-def FA_Lex_state_1() :
-    global int_value
-    global exp_value
-    global sign_value
-    consume_char()
-    ch = peek_char()
-    if ch == '0' :
-        return number_v2_state_1()
-    elif ch == 'E' or ch == 'e' :
-        return number_v2_state_6()
-    elif nonzerodigit(ch) :
-        int_value = int(ch)
-        return number_v2_state_5()
-    elif ch == '.' :
-        return number_v2_state_4()
-    elif ch == END or ch == " ":
-        return (True, int_value)
-    return (False, None)
 
-def FA_Lex_state_2() :
-    global int_value
-    global exp_value
-    global sign_value
-    consume_char()
-    ch = peek_char()
-    if digit(ch) :
-        int_value = int_value * 10 + int(ch)
-        return number_v2_state_2()
-    elif ch == '.' :
-        return number_v2_state_4()
-    elif ch == 'E' or ch == 'e' :
-        return number_v2_state_6()
-    elif ch == END or ch == " ":
-        return (True, int_value)
-    return (False, None)
-
-def FA_Lex_state_3() :
-    global int_value
-    global exp_value
-    global sign_value
-    consume_char()
-    ch = peek_char()
-    print(ch)
-    if digit(ch) :
-        exp_value += 1
-        int_value = int_value * 10 + int(ch)
-        return number_v2_state_4()
-    return (False, None)
 
 
 ############
@@ -827,9 +772,33 @@ NUM, ADD, SOUS, MUL, DIV, OPAR, FPAR = range(7)
 token_value = 0
 
 
-
 def FA_Lex_w_token():
-    print("@ATTENTION: FA_lex_w_token à finir !") # LIGNE A SUPPRIMER
+    global token_value
+    init_char()
+    ch = peek_char()
+    if ch == "(" or ch == ")":
+        consume_char()
+        return (True, OPAR)
+    elif ch == ")":
+        consume_char()
+        return (True, FPAR)
+    elif ch == "+":
+        consume_char()
+        return (True, ADD)
+    elif ch == "-":
+        consume_char()
+        return (True, SOUS)
+    elif ch == "*":
+        consume_char()
+        return (True, MUL)
+    elif ch == "/":
+        consume_char()
+        return (True, DIV)
+    valide, nombre = number_v2()
+    if valide:
+        token_value = nombre
+        return (True, NUM)
+    return (False, None)
 
 
 
@@ -841,10 +810,15 @@ if __name__ == "__main__":
     try:
         #ok = integer_Q2() # changer ici pour tester un autre automate sans valeur
         # ok, val = number() # changer ici pour tester un autre automate avec valeur
-        ok, val = True, eval_exp_v2() # changer ici pour tester eval_exp et eval_exp_v2
+        # ok, val = True, eval_exp_v2() # changer ici pour tester eval_exp et eval_exp_v2
+        # ok = FA_Lex()
+        ok, token = FA_Lex_w_token()
         if ok:
             print("Accepted!")
-            print("value:", val) # décommenter ici pour afficher la valeur (question 4 et +)
+            # print("value:", val) # décommenter ici pour afficher la valeur (question 4 et +)
+            print(f"Valeur de retour du programme: {ok, token}")
+            if token == 0 :
+                print(f"Valeur du token {token_value}")
         else:
             print("Rejected!")
             # print("value so far:", int_value) # décommenter ici pour afficher la valeur en cas de rejet
