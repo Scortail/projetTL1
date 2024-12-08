@@ -544,14 +544,18 @@ def eval_exp():
     else: 
         return number()[1]
 
+
+
+
 ############
 # Question 11 :
 # Première erreur : number ne gère pas l'espace comme fin de mot
 # Deuxième erreur : Lorsque l'on évalue l'expression "+ 13 12", on obtient 15 au lieu du résultat attendu. 
 # En analysant l'erreur, on remarque qu'elle provient du fait que la fonction number 
 # consomme l'espace avant le second nombre. Ensuite, eval_exp consomme le premier 
-# chiffre de ce nombre et donc seul la suite sera prise en compte.
-# Par conséquent le calcul final sera faussé.
+# chiffre de ce nombre et donc seule la suite sera prise en compte.
+# Par conséquent, le calcul final sera faussé.
+
 
 
 ############
