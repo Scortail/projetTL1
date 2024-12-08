@@ -33,6 +33,7 @@ def next_char():
     raise Error('character ' + repr(ch) + ' unsupported')
 
 
+
 ############
 # Question 1 : fonctions nonzerodigit et digit
 
@@ -46,13 +47,13 @@ def digit(char):
     return '0' <= char <= '9'
 
 
+
 ############
 # Question 2 : integer et pointfloat sans valeur
 
 def integer_Q2():
     init_char()
     return integer_Q2_state_0()
-
 
 def integer_Q2_state_0():
     ch = next_char()
@@ -128,7 +129,6 @@ def integer():
     init_char()
     return integer_state_0()
 
-
 def integer_state_0():
     global int_value
     ch = next_char()
@@ -158,6 +158,7 @@ def integer_state_2():
     elif ch == END:
         return (True, int_value)
     return (False, None)
+
 
 
 ############
@@ -232,14 +233,12 @@ def exponent():
     exp_value = 0
     return exponent_state_0()
 
-
 def exponent_state_0():
     global exp_value
     ch = next_char()
     if ch == "e" or ch == "E":
         return exponent_state_1()
     return (False, None)
-
 
 def exponent_state_1():
     global sign_value
@@ -259,7 +258,6 @@ def exponent_state_1():
         return exponent_state_3()
     return (False, None)
 
-
 def exponent_state_2():
     global exp_value
     ch = next_char()
@@ -267,7 +265,6 @@ def exponent_state_2():
         exp_value = int(ch)
         return exponent_state_3()
     return (False, None)
-
 
 def exponent_state_3():
     global exp_value
@@ -279,9 +276,6 @@ def exponent_state_3():
     elif ch == END:
         return (True, exp_value*sign_value)
     return (False, None)
-
-
-
 
 def exponentfloat():
     global int_value
@@ -320,7 +314,6 @@ def exponentfloat_state_1():
         
     return (False, None)
 
-
 def exponentfloat_state_2():
     global int_value
     global exp_value
@@ -354,7 +347,6 @@ def exponentfloat_state_3():
         return exponentfloat_state_5()
     return (False, None)
 
-
 def exponentfloat_state_4():
     global int_value
     global exp_value
@@ -364,7 +356,6 @@ def exponentfloat_state_4():
         exp_value = int(ch)
         return exponentfloat_state_5()
     return (False, None)
-
 
 def exponentfloat_state_5():
     global int_value
@@ -377,7 +368,6 @@ def exponentfloat_state_5():
     elif ch == END:
         return (True, int_value*(10**(exp_value*sign_value)))
     return (False, None)
-
 
 def number():
     global int_value
@@ -752,6 +742,7 @@ def eval_exp_v2():
         return number_v2()[1]
 
 
+
 ############
 # Question 14 : automate pour Lex
 
@@ -761,10 +752,10 @@ def FA_Lex():
     init_char()
     ch = peek_char()
     if ch in operator or ch in ["(", ")"]:
+        # Lex reconnue
         consume_char()
         return True
     return number_v2()[0]
-
 
 
 
